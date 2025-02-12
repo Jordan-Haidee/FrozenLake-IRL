@@ -1,6 +1,6 @@
 import gymnasium as gym
 
-env = gym.make("FrozenLake-v1", render_mode="human")
+env = gym.make("FrozenLake-v1",map_name="8x8" , render_mode="human")
 
 s, _ = env.reset()
 

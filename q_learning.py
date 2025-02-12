@@ -7,12 +7,12 @@ def q_learning(
     env: gym.Env,
     reward_fn: np.ndarray | None = None,
     log: bool = False,
+    num_episodes: int = 2000,
+    alpha: float = 0.50,
+    gamma: float = 0.95,
 ) -> np.ndarray:
     # Q-Learning的超参数
-    alpha = 0.50  # 学习率
-    gamma = 0.95  # 折扣因子
     epsilon_init = 1.00  # 初始探索率
-    num_episodes = 2000  # 训练的回合数
 
     # 初始化Q表
     q = np.zeros([env.observation_space.n, env.action_space.n])

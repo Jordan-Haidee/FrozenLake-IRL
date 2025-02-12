@@ -64,7 +64,7 @@ env = gym.make("FrozenLake-v1", is_slippery=False)
 trajs = get_expert_trajs()
 # Train the reward function
 model = MaxEntIRL(env, expert_trajectories=trajs)
-theta, rewards = model.train(num=500)
+theta, rewards = model.train(iters=500)
 with open("theta.npy", "wb") as f:
     np.save(f, theta)
 # Plot the true rewards

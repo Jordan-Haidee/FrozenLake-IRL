@@ -18,12 +18,14 @@ class MaxEntIRL:
         # Feature map: one-hot encoding of the state (zero overhead)
         return self.features[state]
 
-    def train(self, num: int = 50) -> tuple[np.ndarray, list[float]]:
+    def train(
+        self, iters: int = 50, q_episodes: int = 2000, gamma: float = 0.95, lr: float = 0.05
+    ) -> tuple[np.ndarray, list[float]]:
         # Initialize theta randomly
         theta = np.random.uniform(-1, 1, (self.features.shape[1],)).astype(np.float32)
         # Perform IRL and record the true rewards
         true_rewards_list = []
-        for i in trange(num):
+        for i in trange(iters):
             reward_fn = (
                 np.array(
                     [
@@ -33,10 +35,10 @@ class MaxEntIRL:
                 )
                 @ theta
             )
-            q = q_learning(self.env, reward_fn=reward_fn)
+            q = q_learning(self.env, reward_fn=reward_fn, num_episodes=q_episodes, gamma=gamma)
             trajs, true_rewards = self.generate_trajectories(q)
             feature_expectations = self.compute_feature_expectations(trajs)
-            theta += 0.05 * (self.expert_expectations - feature_expectations)
+            theta += lr * (self.expert_expectations - feature_expectations)
             true_rewards_list.append(np.mean(true_rewards).item())
             tqdm.write(f"{i} -> {true_rewards_list[-1]}")
 
