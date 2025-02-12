@@ -45,13 +45,14 @@ class MaxEntIRL:
     def generate_trajectories(
         self, q: np.ndarray, num: int = 64
     ) -> tuple[list[np.ndarray], list[float]]:
-        # select actions according to the softmax policy
-        policy = np.exp(q) / np.exp(q).sum(axis=1, keepdims=True)
+        # sample via advantage A(s,a) = Q(s,a) - V(s)
+        advantage = q - q.max(axis=1, keepdims=True)
+        policy = np.exp(advantage) / np.exp(advantage).sum(axis=1, keepdims=True)
         trajs = []
         true_rewards = []
         for _ in range(num):
             s, _ = self.env.reset()
-            traj = []
+            traj = [(s, 0)]
             while True:
                 a = np.random.choice(self.env.action_space.n, p=policy[s])
                 s, true_r, t1, t2, _ = self.env.step(a)

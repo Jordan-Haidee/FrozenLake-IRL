@@ -49,7 +49,7 @@ def get_expert_trajs(num: int = 64) -> np.ndarray:
     trajs = []
     for _ in range(num):
         s, _ = env.reset()
-        traj = []
+        traj = [s]
         while True:
             a = optimal_policy(s)
             s, _, t1, t2, _ = env.step(a)
